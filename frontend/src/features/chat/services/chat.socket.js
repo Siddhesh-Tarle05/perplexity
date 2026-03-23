@@ -7,5 +7,4 @@ export function initializeSocket() {
         console.log('Connected to server with id: ' + socket.id)
     })
     return socket
-
 }

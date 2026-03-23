@@ -1,40 +1,27 @@
+import { Sendmessage } from "../services/chat.api";
 import { initializeSocket } from "../services/chat.socket";
-import { Sendmessage } from "../services/chat.api.js";
+import { setChatId, setMessage, setTitle, setAllChats } from "../chat.slice";
 import { useDispatch } from "react-redux";
-import { createNewChat, setChats, setCurrentChatId, setError, setLoading, setNewMessages } from "../chat.slice";
+import { generateImage } from "../services/chat.api";
 export const useChat = () => {
     const dispatch = useDispatch()
-    const handleChatMessage = async ({ message, chatId }) => {
-        console.log(chatId)
-        dispatch(setLoading(true))
+    async function handleChat({ message, chatId }) {
         let response = await Sendmessage({ message, chatId })
         console.log(response)
-        dispatch(setCurrentChatId(chatId || response.chat._id))
-        if (!chatId) {
-            dispatch(createNewChat({ chatId: chatId || response.chat._id, title: response.title }))
-        }
-
-        dispatch(setNewMessages({ chatId: chatId || response.chat._id, message, role: "user" }))
-        dispatch(setNewMessages({ chatId: chatId || response.chat._id, message: response.AiMessage.content, role: "assistant" }))
-
-        dispatch(setLoading(false))
+        dispatch(setChatId(chatId || response.chat._id))
+        dispatch(setTitle(response.title))
+        dispatch(setMessage({ message: message, role: 'user' }))
+        dispatch(setMessage({ message: response.AiMessage.content, role: 'ai' }))
     }
-    const getChats = async () => {
-        dispatch(setLoading(true))
-        try {
-            const response = await getChats()
-            dispatch(setChats(response.chats))
-        } catch (error) {
-            dispatch(setError(error.message))
-        } finally {
-            dispatch(setLoading(false))
-        }
+    async function handlegenerateImage({ prompt, chatId }) {
+        let response = await generateImage({ prompt, chatId })
+              dispatch(setMessage({ message: prompt, role: 'user' }))
+        dispatch(setMessage({ message: response.imageUrl, role: 'ai', type: 'image' }))
     }
-
     return {
         initializeSocket,
-        handleChatMessage,
-        getChats
+        handleChat,
+        handlegenerateImage
     }
 
 }

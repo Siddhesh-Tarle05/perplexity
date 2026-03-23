@@ -3,44 +3,36 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const chatSlice = createSlice({
-    name: "chat",
+    name: 'chatSlice',
     initialState: {
-        chats: {},
-        loading: false,
-        currentChatId: null,
-        error: null,
-        messages: []
+        messages: [],
+        title: null,
+        chatId: null,
+        AllChats:[],
+        isImage:false
     },
     reducers: {
-        createNewChat: (state, action) => {
-            const { chatId, title } = action.payload
-            state.chats[chatId] = {
-                id: chatId,
-                title: title,
-                messages: [],
-                lastUpdated: new Date().toISOString()
-            }
+        setMessage: (state, action) => {
+            let message=action.payload
+            state.messages.push(message)   
         },
-        setNewMessages: (state, action) => {
-            const { chatId, message, role } = action.payload
-            if (state.chats[chatId]) {
-                state.chats[chatId].messages.push({ content: message, role })
-                state.chats[chatId].lastUpdated = new Date().toISOString()
-            }
+        setAllMessage:(state,action)=>{
+            state.messages=action.payload
         },
-        setLoading: (state, action) => {
-            state.loading = action.payload
+        setChatId: (state, action) => {
+            state.chatId=action.payload
         },
-        setChats: (state, action) => {
-            state.chats = action.payload
+        setTitle:(state,action)=>{
+            state.title=action.payload
         },
-        setCurrentChatId: (state, action) => {
-            state.currentChatId = action.payload
+        setAllChats:(state,action)=>{
+            state.AllChats=action.payload
         },
-        setError: (state, action) => {
-            state.error = action.payload
+        setisImage:(state,action)=>{
+            state.isImage=action.payload
         }
     }
+
 })
-export const { setLoading, setCurrentChatId, setChats, setError, createNewChat, setNewMessages } = chatSlice.actions
+export const { setMessage, setChatId, setTitle,setAllChats,setAllMessage,setisImage } = chatSlice.actions
 export default chatSlice.reducer

@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 async function identifyuser(req,res,next) {
+    console.log(req.body)
     let token=req.cookies.token
     if(!token){
         return res.status(401).json({

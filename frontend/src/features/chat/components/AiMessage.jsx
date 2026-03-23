@@ -1,7 +1,10 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
+import { useSelector } from 'react-redux'
 
-const AiMessage = ({ message }) => {
+const AiMessage = ({ message,type }) => {
+  console.log(message)
+  // const {isImage}=useSelector((state)=>state.chat)
   return (
     <div className="flex gap-5">
       <div className="w-8 h-8 rounded bg-[#1C1C1F] flex items-center justify-center shrink-0 border border-white/5 mt-0.5">
@@ -15,23 +18,34 @@ const AiMessage = ({ message }) => {
           Monolith AI
         </span>
 
-        {/* ✅ Markdown rendering */}
+        {/*  Markdown rendering */}
         <div className="text-gray-300 leading-relaxed text-[15px] pl-1">
-          <ReactMarkdown
-            components={{
-              p: ({node, ...props}) => <p className="mb-2" {...props} />,
-              li: ({node, ...props}) => <li className="ml-4 list-disc" {...props} />,
-              code: ({node, inline, ...props}) =>
-                inline ? (
-                  <code className="bg-gray-800 px-1 rounded" {...props} />
-                ) : (
-                  <code className="block bg-gray-900 p-3 rounded-lg overflow-x-auto" {...props} />
-                ),
-            }}
-          >
-            {message}
-          </ReactMarkdown>
-        </div>
+  {type==='image' ? (
+    <img
+      src={message}
+      alt="generated"
+      className="rounded-lg max-w-xs"
+    />
+  ) : (
+    <ReactMarkdown
+      components={{
+        p: ({ node, ...props }) => <p className="mb-2" {...props} />,
+        li: ({ node, ...props }) => (
+          <li className="ml-4 list-disc" {...props} />
+        ),
+        code: ({ node, inline, ...props }) =>
+          inline ? (
+            <code className="bg-gray-800 px-1 rounded" {...props} />
+          ) : (
+            <code className="block bg-gray-900 p-3 rounded-lg overflow-x-auto" {...props} />
+          ),
+      }}
+    >
+      {message}
+    </ReactMarkdown>
+  )}
+</div>
+
       </div>
     </div>
   )
